@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self' http://jsonplaceholder.typicode.com; 
                    style-src 'self' 'unsafe-inline';
-                   script-src 'self'">
+                   script-src 'self' 'unsafe-inline'">
     <title>Posts Explorer</title>
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -77,12 +77,6 @@
         </div>
     </div>
 
-    <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
-    <script>
-        import App from './js/main.js';
-        // Initialize the application
-        const app = new App();
-    </script>
+    <script type="module" src="./js/main.js"></script>
 </body>
 </html>

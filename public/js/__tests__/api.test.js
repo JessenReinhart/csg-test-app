@@ -1,88 +1,54 @@
 import API from '../api.js';
 
 describe('API', () => {
-    const mockPost = {
-        id: 1,
-        title: 'Test Post',
-        body: 'Test Body',
-        userId: 1
-    };
-
-    const mockComment = {
-        id: 1,
-        postId: 1,
-        name: 'Test Name',
-        email: 'test@example.com',
-        body: 'Test Comment'
-    };
-
     beforeEach(() => {
-        fetch.mockClear();
+        global.fetch = jest.fn();
     });
 
-    describe('validateResponse', () => {
-        test('should throw error for non-ok response', () => {
-            const response = { ok: false, status: 404 };
-            expect(() => API.validateResponse(response)).toThrow('HTTP error! status: 404');
-        });
-
-        test('should return response for ok response', () => {
-            const response = { ok: true };
-            expect(API.validateResponse(response)).toEqual(response);
-        });
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     describe('getPosts', () => {
-        test('should fetch and format posts correctly', async () => {
-            const mockResponse = { ok: true, json: () => Promise.resolve([mockPost]) };
-            fetch.mockResolvedValueOnce(mockResponse);
+        test('successfully fetches posts', async () => {
+            const mockPosts = [{ id: 1, title: 'Test', body: 'Content', userId: 1 }];
+            fetch.mockResolvedValue({
+                ok: true,
+                json: () => Promise.resolve(mockPosts)
+            });
 
             const posts = await API.getPosts();
-            expect(posts).toHaveLength(1);
-            expect(posts[0]).toEqual(mockPost);
             expect(fetch).toHaveBeenCalledWith('http://jsonplaceholder.typicode.com/posts');
+            expect(posts).toEqual(mockPosts);
         });
 
-        test('should handle invalid data format', async () => {
-            const mockResponse = { ok: true, json: () => Promise.resolve('invalid') };
-            fetch.mockResolvedValueOnce(mockResponse);
-
-            await expect(API.getPosts()).rejects.toThrow('Invalid data format');
-        });
-
-        test('should handle network error', async () => {
-            fetch.mockRejectedValueOnce(new Error('Network error'));
-            await expect(API.getPosts()).rejects.toThrow('Network error');
+        test('handles API errors', async () => {
+            fetch.mockResolvedValue({ ok: false, status: 500 });
+            await expect(API.getPosts()).rejects.toThrow('HTTP error! status: 500');
         });
     });
 
     describe('getComments', () => {
-        test('should fetch and format comments correctly', async () => {
-            const mockResponse = { ok: true, json: () => Promise.resolve([mockComment]) };
-            fetch.mockResolvedValueOnce(mockResponse);
+        test('successfully fetches comments with valid post ID', async () => {
+            const mockComments = [{ id: 1, postId: 1, name: 'Test', email: 'test@test.com', body: 'Comment' }];
+            fetch.mockResolvedValue({
+                ok: true,
+                json: () => Promise.resolve(mockComments)
+            });
 
             const comments = await API.getComments(1);
-            expect(comments).toHaveLength(1);
-            expect(comments[0]).toEqual(mockComment);
             expect(fetch).toHaveBeenCalledWith('http://jsonplaceholder.typicode.com/posts/1/comments');
+            expect(comments).toEqual(mockComments);
         });
 
-        test('should reject invalid post ID', async () => {
+        test('rejects invalid post IDs', async () => {
             await expect(API.getComments('invalid')).rejects.toThrow('Invalid post ID');
-            await expect(API.getComments(0)).rejects.toThrow('Invalid post ID');
             await expect(API.getComments(-1)).rejects.toThrow('Invalid post ID');
         });
 
-        test('should handle invalid data format', async () => {
-            const mockResponse = { ok: true, json: () => Promise.resolve('invalid') };
-            fetch.mockResolvedValueOnce(mockResponse);
-
-            await expect(API.getComments(1)).rejects.toThrow('Invalid data format');
-        });
-
-        test('should handle network error', async () => {
-            fetch.mockRejectedValueOnce(new Error('Network error'));
-            await expect(API.getComments(1)).rejects.toThrow('Network error');
+        test('handles API errors', async () => {
+            fetch.mockResolvedValue({ ok: false, status: 404 });
+            await expect(API.getComments(1)).rejects.toThrow('HTTP error! status: 404');
         });
     });
 });

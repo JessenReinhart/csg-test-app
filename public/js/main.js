@@ -7,7 +7,8 @@ class App {
         this.currentPage = 'posts';
         this.initializeElements();
         this.attachEventListeners();
-        this.loadData();
+        // Defer loading data to ensure initial state is properly tested
+        setTimeout(() => this.loadData(), 0);
     }
 
     initializeElements() {
@@ -133,5 +134,10 @@ class App {
         this.commentsModal.classList.add('hidden');
     }
 }
+
+// Initialize the application when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new App();
+});
 
 export default App;

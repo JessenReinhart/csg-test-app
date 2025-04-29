@@ -1,7 +1,7 @@
 const API_BASE_URL = 'http://jsonplaceholder.typicode.com';
 
 class API {
-    static validateResponse(response) {
+    static async validateResponse(response) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -11,7 +11,7 @@ class API {
     static async getPosts() {
         try {
             const response = await fetch(`${API_BASE_URL}/posts`);
-            this.validateResponse(response);
+            await this.validateResponse(response);
             const data = await response.json();
             
             // Validate data structure
@@ -39,7 +39,7 @@ class API {
             }
 
             const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`);
-            this.validateResponse(response);
+            await this.validateResponse(response);
             const data = await response.json();
 
             // Validate data structure

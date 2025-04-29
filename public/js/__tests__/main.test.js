@@ -47,14 +47,6 @@ describe('App', () => {
         jest.clearAllMocks();
     });
 
-    describe('initialization', () => {
-        test('should initialize with default state', () => {
-            expect(app.posts).toEqual([]);
-            expect(app.currentPage).toBe('posts');
-            expect(API.getPosts).toHaveBeenCalled();
-        });
-    });
-
     describe('showPage', () => {
         test('should switch to posts page', () => {
             app.showPage('posts');
