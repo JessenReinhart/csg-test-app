@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self' http://jsonplaceholder.typicode.com; 
+                   style-src 'self' 'unsafe-inline';
+                   script-src 'self'">
+    <title>Posts Explorer</title>
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-4">
+                    <button id="postsLink" class="py-4 px-2 text-gray-700 hover:text-gray-900 font-semibold border-b-2 border-transparent hover:border-blue-500">Posts</button>
+                    <button id="reportsLink" class="py-4 px-2 text-gray-700 hover:text-gray-900 font-semibold border-b-2 border-transparent hover:border-blue-500">Reports</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Posts Page -->
+    <div id="postsPage" class="max-w-6xl mx-auto p-4">
+        <div class="mb-4">
+            <input type="text" id="searchInput" placeholder="Search posts..." class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="bg-white rounded-lg shadow-lg p-4">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Body</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="postsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Reports Page -->
+    <div id="reportsPage" class="max-w-6xl mx-auto p-4 hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Rerum Count Report -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <h2 class="text-xl font-semibold mb-4">Posts containing "rerum"</h2>
+                <div id="rerumCount" class="text-3xl font-bold text-blue-600"></div>
+            </div>
+            <!-- User Posts Count Report -->
+            <div class="bg-white rounded-lg shadow-lg p-4">
+                <h2 class="text-xl font-semibold mb-4">Posts per User</h2>
+                <table class="min-w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post Count</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userPostsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div id="commentsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Comments</h3>
+                <button id="closeModal" class="text-gray-600 hover:text-gray-900">&times;</button>
+            </div>
+            <div id="commentsContent" class="max-h-96 overflow-y-auto"></div>
+        </div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        import App from './js/main.js';
+        // Initialize the application
+        const app = new App();
+    </script>
+</body>
+</html>
